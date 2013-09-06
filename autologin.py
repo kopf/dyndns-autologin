@@ -8,11 +8,15 @@ import sys
 
 import mechanize
 
+try:
+    from settings import USERNAME, PASSWORD
+except ImportError:
+    print "You need to create a settings.py file with the following content:"
+    print "USERNAME = 'my_username_here'"
+    print "PASSWORD = 'my_password_here'"
+    print "\n"
+    sys.exit(-1)
 
-SETTINGS = {
-    'username': '',
-    'password': ''
-}
 
 SEARCH_STR = '<span>Welcome&nbsp;<b>{0}</b></span>'
 
@@ -24,9 +28,6 @@ USER_AGENTS = [
 
 
 if __name__ == '__main__':
-    if not SETTINGS['username'] or not SETTINGS['password']:
-        sys.stderr.write("You need to configure the autologin.SETTINGS variable\n")
-        sys.exit(-1)
     mech = mechanize.Browser()
     mech.set_handle_robots(False)
     mech.set_handle_redirect(True)
@@ -34,10 +35,10 @@ if __name__ == '__main__':
     mech.addheaders = [('User-agent', random.choice(USER_AGENTS))]
     mech.open('https://account.dyn.com/')
     mech.select_form(nr=0)
-    mech['username'] = SETTINGS['username']
-    mech['password'] = SETTINGS['password']
+    mech['username'] = USERNAME
+    mech['password'] = PASSWORD
     result = mech.submit().read()
-    if SEARCH_STR.format(SETTINGS['username']) not in result:
+    if SEARCH_STR.format(USERNAME) not in result:
         sys.stderr.write("Didn't find welcome message in response.\n")
         sys.stderr.write("Something might be wrong. Log in manually.\n")
         sys.exit(-1)
