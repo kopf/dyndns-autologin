@@ -34,7 +34,7 @@ if __name__ == '__main__':
     mech.set_handle_referer(True)
     mech.addheaders = [('User-agent', random.choice(USER_AGENTS))]
     mech.open('https://account.dyn.com/')
-    mech.select_form(nr=0)
+    mech.select_form(nr=1)
     mech['username'] = USERNAME
     mech['password'] = PASSWORD
     result = mech.submit().read()
