@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #
 # Logs in to dyndns so your account is kept active.
 #
@@ -34,14 +34,30 @@ if __name__ == '__main__':
     mech.set_handle_referer(True)
     mech.addheaders = [('User-agent', random.choice(USER_AGENTS))]
     mech.open('https://account.dyn.com/')
-    mech.select_form(nr=1)
+
+    # find first form that has id starting with 'login'
+    login_form = None
+    for form in mech.forms():
+        # DynDNS used dynamic names for login form like 'login142', 'login189', ...
+        if form.attrs['id'].startswith('login'):
+            login_form = form
+            break
+
+    if not login_form:
+        sys.stderr.write('Could not find login form. Maybe DynDNS changed site.')
+        sys.exit(-1)
+
+    # Set focus on form
+    mech.form = login_form
     mech['username'] = USERNAME
     mech['password'] = PASSWORD
     result = mech.submit().read()
     if SEARCH_STR.format(USERNAME) not in result:
         sys.stderr.write("Didn't find welcome message in response.\n")
         sys.stderr.write("Something might be wrong. Log in manually.\n")
+        mech.close()
         sys.exit(-1)
     else:
         print 'Logged in successfully.'
+        mech.close()
         sys.exit(0)
