@@ -41,7 +41,9 @@ if __name__ == '__main__':
     if SEARCH_STR.format(USERNAME) not in result:
         sys.stderr.write("Didn't find welcome message in response.\n")
         sys.stderr.write("Something might be wrong. Log in manually.\n")
+        mech.close()
         sys.exit(-1)
     else:
         print 'Logged in successfully.'
+        mech.close()
         sys.exit(0)
