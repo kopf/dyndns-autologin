@@ -39,8 +39,7 @@ if __name__ == '__main__':
     login_form = None
     for form in mech.forms():
         # DynDNS used dynamic names for login form like 'login142', 'login189', ...
-        id = form.attrs['id']
-        if id.startswith('login'):
+        if form.attrs['id'].startswith('login'):
             login_form = form
             break
 
