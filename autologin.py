@@ -44,7 +44,8 @@ if __name__ == '__main__':
             break
 
     if not login_form:
-        sys.stderr.write('Could not find login form. Maybe DynDNS changed site.')
+        sys.stderr.write('Could not find login form.\n')
+        sys.stderr.write('This script may need updating.\n')
         sys.exit(-1)
 
     # Set focus on form
@@ -52,12 +53,16 @@ if __name__ == '__main__':
     mech['username'] = USERNAME
     mech['password'] = PASSWORD
     result = mech.submit().read()
-    if SEARCH_STR.format(USERNAME) not in result:
+    if 'Username or password did not match' in result:
+        sys.stderr.write("Username or password incorrect.\n")
+        sys.stderr.write("Please check your credentials in settings.py\n")
+        errorlevel = -1
+    elif SEARCH_STR.format(USERNAME) not in result:
         sys.stderr.write("Didn't find welcome message in response.\n")
         sys.stderr.write("Something might be wrong. Log in manually.\n")
-        mech.close()
-        sys.exit(-1)
+        errorlevel = -1
     else:
         print 'Logged in successfully.'
-        mech.close()
-        sys.exit(0)
+        errorlevel = 0
+    mech.close()
+    sys.exit(errorlevel)
