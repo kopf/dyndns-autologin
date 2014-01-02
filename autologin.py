@@ -18,7 +18,7 @@ except ImportError:
     sys.exit(-1)
 
 
-SEARCH_STR = '<span>Welcome&nbsp;<b>{0}</b></span>'
+SEARCH_STR = '&nbsp;<b>{0}</b></span>'
 
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
